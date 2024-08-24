@@ -1,4 +1,4 @@
-package Crawler
+package crawler
 
 import (
 	// "fmt"
@@ -18,6 +18,10 @@ type MetroInfo struct {
 	stationName []string
 	stationInfo map[string]StationInfo
 	trainsCount int
+}
+
+func (MetroInfo) TableName() string {
+	return "metroInfo"
 }
 
 func Webcrawler() map[string]MetroInfo {

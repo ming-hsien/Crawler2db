@@ -1,11 +1,14 @@
 package main
 
 import (
-	"Crawler2db/Crawler"
+	"Crawler2db/crawler"
+	"Crawler2db/postgres"
 	"fmt"
 )
 
 func main() {
-	MetroInfo := Crawler.Webcrawler()
-	fmt.Print(MetroInfo)
+	MetroInfo := crawler.Webcrawler()
+	// fmt.Print(MetroInfo)
+	err := postgres.Update(MetroInfo)
+	fmt.Print(err)
 }
