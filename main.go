@@ -8,7 +8,6 @@ import (
 
 func main() {
 	MetroInfo := crawler.Webcrawler()
-	// fmt.Print(MetroInfo)
 	err := postgres.Update(MetroInfo)
 	fmt.Print(err)
 }

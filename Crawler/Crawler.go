@@ -1,27 +1,20 @@
 package crawler
 
 import (
-	// "fmt"
 	"log"
 	"net/http"
-
-	// "sort"
 
 	"github.com/PuerkitoBio/goquery"
 )
 
 type StationInfo struct {
-	arrivalTime []string
+	ArrivalTimeList []string
 }
 
 type MetroInfo struct {
-	stationName []string
-	stationInfo map[string]StationInfo
-	trainsCount int
-}
-
-func (MetroInfo) TableName() string {
-	return "metroInfo"
+	StationName []string
+	StationInfo map[string]StationInfo
+	TrainsCount int
 }
 
 func Webcrawler() map[string]MetroInfo {
@@ -42,7 +35,7 @@ func Webcrawler() map[string]MetroInfo {
 		log.Fatal(err)
 	}
 
-	lines := map[string]MetroInfo{}
+	lines := make(map[string]MetroInfo)
 	currentLine := "G"
 	stationName := []string{}
 	trainsCount := 0
@@ -67,9 +60,9 @@ func Webcrawler() map[string]MetroInfo {
 			rowHtml.Find("td").Each(func(indexTd int, cellHtml *goquery.Selection) {
 				cellText := cellHtml.Text()
 				if cellText == "==" {
-					buf.arrivalTime = append(buf.arrivalTime, "")
+					buf.ArrivalTimeList = append(buf.ArrivalTimeList, "")
 				} else {
-					buf.arrivalTime = append(buf.arrivalTime, cellText)
+					buf.ArrivalTimeList = append(buf.ArrivalTimeList, cellText)
 				}
 				trainsCount++
 			})
@@ -79,9 +72,9 @@ func Webcrawler() map[string]MetroInfo {
 	})
 
 	lines[currentLine] = MetroInfo{
-		stationName: stationName,
-		stationInfo: stationInfo,
-		trainsCount: trainsCount,
+		StationName: stationName,
+		StationInfo: stationInfo,
+		TrainsCount: trainsCount,
 	}
 
 	return lines

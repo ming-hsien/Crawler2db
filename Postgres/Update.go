@@ -5,27 +5,29 @@ import (
 	"log"
 )
 
-type dbInfo struct {
-	stationName string
-	
-}
-
 func Update(MetroInfo map[string]crawler.MetroInfo) error {
 	db, err := connectDB()
 	if err != nil {
 		return err
 	}
-	err = db.AutoMigrate(&crawler.MetroInfo{})
+	err = db.AutoMigrate(&DBInfo{})
 	if err != nil {
 		log.Fatal("failed to migrate database", err)
 	}
-	for _, v := range(MetroInfo) {
-		result := db.Create(v)
-		if result.Error != nil {
-			log.Fatal("failed to insert data", result.Error)
+	for k, v := range(MetroInfo) {
+		for _, station := range v.StationName {
+			newdb := &DBInfo{
+				Line: k,
+				StationName: station,
+				ArrivalTimes: v.StationInfo[station].ArrivalTimeList,
+			}
+			result := db.Create(newdb)
+			if result.Error != nil {
+				log.Fatal("failed to insert data", result.Error)
+				break
+			}
 		}
 	}
-	
-	
+
 	return nil
 }
